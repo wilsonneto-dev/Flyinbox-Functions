@@ -15,12 +15,12 @@ class YapopleEmailImporter implements IEmailImporter {
 
   private async configureAndConnect() {
     this._yapopleClient = new YapopleClient({
-      host: "mail.wilsonneto.com.br",
-      port: 110,
+      host: process.env.EMAIL_POP3_HOST,
+      port: Number(process.env.EMAIL_POP3_PORT),
       tls: false,
       mailparser: true,
-      username: "flyinbox@wilsonneto.com.br",
-      password: "@+r}N9F8AWPH"
+      username: process.env.EMAIL_POP3_USER,
+      password: process.env.EMAIL_POP3_PASS,
     });
     await this._yapopleClient.connect();    
   }
@@ -35,7 +35,7 @@ class YapopleEmailImporter implements IEmailImporter {
       emailDTO.subject = yapopleEmail.subject;
       emailDTO.to = yapopleEmail.to[0].address;
       emailDTO.messageId = yapopleEmail.messageId;
-      emailDTO.contentType = yapopleEmail.headers.contentType;
+      emailDTO.contentType = yapopleEmail.headers['content-type'];
       emailDTO.receivedDate = yapopleEmail.receivedDate;
       newEmailsList.push(emailDTO);
     });
